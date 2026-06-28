@@ -60548,12 +60548,26 @@ var port = Number(rawPort);
 if (Number.isNaN(port) || port <= 0) {
   throw new Error(`Invalid PORT value: "${rawPort}"`);
 }
-app_default.listen(port, (err) => {
+async function seedSuperAdmin() {
+  const phone = process.env["SEED_ADMIN_PHONE"] ?? "47999000001";
+  const password = process.env["SEED_ADMIN_PASSWORD"] ?? "admin123";
+  const name = process.env["SEED_ADMIN_NAME"] ?? "Super Admin";
+  const [existing] = await db.select({ id: usersTable.id }).from(usersTable).where(eq(usersTable.phone, phone)).limit(1);
+  if (existing) {
+    logger.info("Super admin j\xE1 existe, seed ignorado.");
+    return;
+  }
+  const passwordHash = await bcryptjs_default.hash(password, 10);
+  await db.insert(usersTable).values({ name, phone, passwordHash, role: "super_admin" });
+  logger.info({ phone }, "Super admin criado automaticamente.");
+}
+app_default.listen(port, async (err) => {
   if (err) {
     logger.error({ err }, "Error listening on port");
     process.exit(1);
   }
   logger.info({ port }, "Server listening");
+  await seedSuperAdmin();
 });
 /*! Bundled license information:
 
