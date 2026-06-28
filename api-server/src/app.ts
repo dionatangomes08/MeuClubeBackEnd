@@ -4,6 +4,9 @@ import pinoHttp from "pino-http";
 import session from "express-session";
 import router from "./routes";
 import { logger } from "./lib/logger";
+import connectPgSimple from "connect-pg-simple";
+import { pool } from "@workspace/db";
+const PgSession = connectPgSimple(session);
 
 const app: Express = express();
 
@@ -32,6 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
+    store: new PgSession({ pool, createTableIfMissing: true }),
     secret: process.env.SESSION_SECRET ?? "meu-clube-dev-secret",
     resave: false,
     saveUninitialized: false,
