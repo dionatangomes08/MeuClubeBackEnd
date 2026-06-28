@@ -1,0 +1,12 @@
+packages:
+  - api-server
+  - lib/db
+  - lib/api-zod
+  - lib/api-client-react
+
+allowBuilds:
+  esbuild: true
+
+onlyBuiltDependencies:
+  - esbuild
+  - msw
