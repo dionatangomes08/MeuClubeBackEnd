@@ -1,6 +1,6 @@
 import { pool } from "@workspace/db";
 // @ts-expect-error — esbuild loads .sql as text via loader config
-import migration0000 from "../../../lib/db/drizzle/0000_common_doctor_faustus.sql";
+import migration0000 from "./lib/db/drizzle/0000_common_doctor_faustus.sql";
 
 const MIGRATIONS: { hash: string; sql: string }[] = [
   { hash: "0000_common_doctor_faustus", sql: migration0000 as string },
