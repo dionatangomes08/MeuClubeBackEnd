@@ -60209,12 +60209,18 @@ router2.post("/login", async (req, res) => {
   }
   req.session.userId = user.id;
   req.session.companyId = companyId;
-  res.json({
-    id: user.id,
-    name: user.name,
-    phone: user.phone,
-    role: user.role,
-    companyId
+  req.session.save((err) => {
+    if (err) {
+      res.status(500).json({ error: "Erro ao salvar sess\xE3o" });
+      return;
+    }
+    res.json({
+      id: user.id,
+      name: user.name,
+      phone: user.phone,
+      role: user.role,
+      companyId
+    });
   });
 });
 router2.post("/logout", (req, res) => {

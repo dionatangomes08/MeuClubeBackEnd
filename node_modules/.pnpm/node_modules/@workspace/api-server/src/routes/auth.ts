@@ -58,12 +58,18 @@ router.post("/login", async (req, res) => {
   req.session.userId = user.id;
   req.session.companyId = companyId;
 
-  res.json({
-    id: user.id,
-    name: user.name,
-    phone: user.phone,
-    role: user.role,
-    companyId,
+  req.session.save((err) => {
+    if (err) {
+      res.status(500).json({ error: "Erro ao salvar sessão" });
+      return;
+    }
+    res.json({
+      id: user.id,
+      name: user.name,
+      phone: user.phone,
+      role: user.role,
+      companyId,
+    });
   });
 });
 
