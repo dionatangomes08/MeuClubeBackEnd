@@ -3,6 +3,7 @@ import { logger } from "./lib/logger";
 import { db, usersTable } from "@workspace/db";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
+import { runMigrations } from "./migrate";
 
 const rawPort = process.env["PORT"];
 
@@ -47,5 +48,7 @@ app.listen(port, async (err) => {
 
   logger.info({ port }, "Server listening");
 
+  await runMigrations();
+  await seedSuperAdmin();
   await seedSuperAdmin();
 });
