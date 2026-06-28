@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   session({
-    store: new PgSession({ pool, createTableIfMissing: true }),
+    //store: new PgSession({ pool, createTableIfMissing: true }),
     secret: process.env.SESSION_SECRET ?? "meu-clube-dev-secret",
     resave: false,
     saveUninitialized: false,

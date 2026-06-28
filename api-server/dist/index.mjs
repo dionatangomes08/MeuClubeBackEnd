@@ -60871,7 +60871,7 @@ app.use(import_express11.default.json());
 app.use(import_express11.default.urlencoded({ extended: true }));
 app.use(
   (0, import_express_session.default)({
-    store: new PgSession2({ pool, createTableIfMissing: true }),
+    //store: new PgSession({ pool, createTableIfMissing: true }),
     secret: process.env.SESSION_SECRET ?? "meu-clube-dev-secret",
     resave: false,
     saveUninitialized: false,
@@ -61019,6 +61019,17 @@ async function runMigrations() {
       `INSERT INTO "__drizzle_migrations" (hash, created_at) VALUES ($1, $2)`,
       [migration.hash, Date.now()]
     );
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS "session" (
+        "sid" varchar NOT NULL,
+        "sess" json NOT NULL,
+        "expire" timestamp(6) NOT NULL,
+        CONSTRAINT "session_pkey" PRIMARY KEY ("sid")
+      )
+    `);
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire")
+    `);
   }
 }
 

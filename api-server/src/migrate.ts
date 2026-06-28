@@ -41,5 +41,16 @@ export async function runMigrations() {
       `INSERT INTO "__drizzle_migrations" (hash, created_at) VALUES ($1, $2)`,
       [migration.hash, Date.now()],
     );
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS "session" (
+        "sid" varchar NOT NULL,
+        "sess" json NOT NULL,
+        "expire" timestamp(6) NOT NULL,
+        CONSTRAINT "session_pkey" PRIMARY KEY ("sid")
+      )
+    `);
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire")
+    `);
   }
 }
